@@ -11,14 +11,6 @@ from src.greeks import delta, delta_vs_spot, gamma, rho, theta, vega
 from src.monte_carlo import convergence_data, mc_price
 
 
-st.markdown(
-    """<style>
-  .stApp { background-color: #0e1117; }
-  .metric-card { background-color: #1e2130; border-radius: 10px; padding: 20px; }
-  </style>""",
-    unsafe_allow_html=True,
-)
-
 st.set_page_config(
     page_title="Monte Carlo Option Pricer",
     layout="wide",
@@ -37,17 +29,6 @@ def _plotly_dark_transparent(fig: go.Figure) -> go.Figure:
     fig.update_xaxes(showgrid=True, gridcolor="rgba(255,255,255,0.08)")
     fig.update_yaxes(showgrid=True, gridcolor="rgba(255,255,255,0.08)")
     return fig
-
-
-def _metric_card(title: str, value: str, help_text: str | None = None) -> str:
-    help_html = f"<div style='color:rgba(255,255,255,0.65); font-size: 0.9rem; margin-top: 6px;'>{help_text}</div>" if help_text else ""
-    return f"""
-    <div class="metric-card">
-      <div style="color: rgba(255,255,255,0.65); font-size: 0.95rem;">{title}</div>
-      <div style="font-size: 1.6rem; font-weight: 700; margin-top: 8px;">{value}</div>
-      {help_html}
-    </div>
-    """
 
 
 def _format_maybe_number(x: Any, digits: int = 6) -> str:
@@ -253,9 +234,9 @@ tab1, tab2, tab3, tab4 = st.tabs(["💰 Pricing", "📊 Payoff Distribution", "�
 
 with tab1:
     cols = st.columns(3)
-    cols[0].markdown(_metric_card("BS Price", _format_maybe_number(bs_price_val)))
-    cols[1].markdown(_metric_card("MC Price", _format_maybe_number(mc_price_val)))
-    cols[2].markdown(_metric_card("Difference (%)", _format_percent(diff_pct)))
+    cols[0].metric(label="BS Price", value=_format_maybe_number(bs_price_val))
+    cols[1].metric(label="MC Price", value=_format_maybe_number(mc_price_val))
+    cols[2].metric(label="Difference (%)", value=_format_percent(diff_pct))
 
     xs = [int(t[0]) for t in conv]
     ys = [float(t[1]) for t in conv]
@@ -383,11 +364,11 @@ with tab2:
 
 with tab3:
     cols5 = st.columns(5)
-    cols5[0].markdown(_metric_card("Delta", f"{delta(S, K, T, r, sigma, option_type):.6f}"))
-    cols5[1].markdown(_metric_card("Gamma", f"{gamma(S, K, T, r, sigma, option_type):.6f}"))
-    cols5[2].markdown(_metric_card("Vega", f"{vega(S, K, T, r, sigma, option_type):.6f}"))
-    cols5[3].markdown(_metric_card("Theta", f"{theta(S, K, T, r, sigma, option_type):.6f}"))
-    cols5[4].markdown(_metric_card("Rho", f"{rho(S, K, T, r, sigma, option_type):.6f}"))
+    cols5[0].metric(label="Delta", value=f"{delta(S, K, T, r, sigma, option_type):.6f}")
+    cols5[1].metric(label="Gamma", value=f"{gamma(S, K, T, r, sigma, option_type):.6f}")
+    cols5[2].metric(label="Vega", value=f"{vega(S, K, T, r, sigma, option_type):.6f}")
+    cols5[3].metric(label="Theta", value=f"{theta(S, K, T, r, sigma, option_type):.6f}")
+    cols5[4].metric(label="Rho", value=f"{rho(S, K, T, r, sigma, option_type):.6f}")
 
     spot_prices, deltas = delta_vs_spot(S, K, T, r, sigma, option_type)
     delta_fig = go.Figure()
